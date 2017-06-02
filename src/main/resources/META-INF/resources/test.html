@@ -1,0 +1,23 @@
+<!doctype html>
+<html ng-app="demo2">
+<head>
+<title>Hello AngularJS</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+<script src="hello.js"></script>
+</head>
+
+<body>
+	<div id='formDiv' ng-controller="myCtrl">
+		<p>{{message}}</p>
+
+		First Name: <input type='text' ng-model='inputValue.firstName' /><br/>
+		Second Name: <input type='text' ng-model='inputValue.secondName' /><br/>
+		
+		{{inputValue.firstName}} - {{inputValue.secondName}} <br/>
+		
+		<button ng-click="sendUserData()">Click Me!</button>
+	</div>
+</body>
+
+</html>
