@@ -1,6 +1,6 @@
 
-var clickButtonApp = angular.module('demo2', []);
-clickButtonApp.controller('myCtrl', function($scope, $http) {
+var clickButtonApp = angular.module('postTest', []);
+clickButtonApp.controller('myController', function($scope, $http) {
 	$scope.inputValue = {
 		secondName : "",
 		firstName : "",
@@ -9,9 +9,9 @@ clickButtonApp.controller('myCtrl', function($scope, $http) {
 
 	$scope.sendUserData = function() {
 
-		$http.post('http://localhost:8080/sandbox/postit',
-				JSON.stringify($scope.inputValue)).success(
-				function(data, status, headers, config) {
+		$http.post('http://localhost:8080/sandbox/user',
+				JSON.stringify($scope.inputValue))
+				.success(function(data, status, headers, config) {
 					// this callback will be called asynchronously
 					// when the response is available
 					$scope.inputValue = data;
@@ -20,9 +20,9 @@ clickButtonApp.controller('myCtrl', function($scope, $http) {
 
 					console.log(data);
 				}).error(function(data, status, headers, config) {
-			// called asynchronously if an error occurs
-			// or server returns response with an error status.
-		});
+					// called asynchronously if an error occurs
+					// or server returns response with an error status.
+				});
 
 	}
 });

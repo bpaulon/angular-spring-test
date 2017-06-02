@@ -1,4 +1,4 @@
-package bcp.spring.jackson;
+package bcp.spring.angularjs;
 
 import javax.annotation.PostConstruct;
 

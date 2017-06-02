@@ -1,4 +1,4 @@
-package bcp.spring.jackson;
+package bcp.spring.angularjs;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,10 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserController {
 
-	@RequestMapping(value = "/postit", method = RequestMethod.POST)
+	@RequestMapping(value = "/user", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public User helloUser(@RequestBody User user) {
-		log.debug("helloUser received: {}", user);
+		log.debug("Received: {}", user);
 
 		user.id("007");
 		return user;

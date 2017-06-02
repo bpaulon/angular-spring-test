@@ -1,18 +1,17 @@
 <!doctype html>
-<html ng-app="demo2">
+<html>
 <head>
 <title>Hello AngularJS</title>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
-<script src="hello.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+<script src="userApp.js"></script>
 </head>
 
 <body>
-	<div id='formDiv' ng-controller="myCtrl">
+	<div ng-app="postTest" id='formDiv' ng-controller="myController">
 		<p>{{message}}</p>
 
-		First Name: <input type='text' ng-model='inputValue.firstName' /><br/>
-		Second Name: <input type='text' ng-model='inputValue.secondName' /><br/>
+		First Name: &nbsp<input type='text' ng-model='inputValue.firstName' /><br/><br/>
+		Last  Name: &nbsp<input type='text' ng-model='inputValue.secondName' /><br/>
 		
 		{{inputValue.firstName}} - {{inputValue.secondName}} <br/>
 		
