@@ -1,4 +1,4 @@
-package bcp.spring.angularjs;
+package bcp.spring.angularjs.userhello;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

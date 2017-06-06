@@ -1,4 +1,4 @@
-package bcp.spring.angularjs;
+package bcp.spring.angularjs.userhello;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
