@@ -1,13 +1,24 @@
 <!doctype html>
-<html>
+<html ng-app="postTest">
 <head>
 <title>Hello AngularJS</title>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
-<script src="userApp.js"></script>
+
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js"></script>
+	
+	<!-- Include your JavaScript files here -->
+	<script src="userApp.js"></script>
 </head>
 
 <body>
-	<div ng-app="postTest" id='formDiv' ng-controller="myController">
+	<div  id='formDiv' ng-controller="myController">
 		<p>{{message}}</p>
 
 		First Name: &nbsp<input type='text' ng-model='inputValue.firstName' /><br/><br/>
@@ -17,6 +28,11 @@
 		
 		<button ng-click="sendUserData()">Click Me!</button>
 	</div>
+	
+	<div id="autoComplete" ng-controller="TypeaheadCtrl">
+        <pre>Model: {{result | json}}</pre>
+        <input type="text" ng-model="result" typeahead="suggestion for suggestion in cities($viewValue)">
+    </div>
 </body>
 
 </html>

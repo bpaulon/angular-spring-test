@@ -1,6 +1,8 @@
 
-var clickButtonApp = angular.module('postTest', []);
-clickButtonApp.controller('myController', function($scope, $http) {
+//angular.module(['ui.bootstrap'])
+
+angular.module('postTest', ['autocomplete']);
+angular.module('postTest').controller('myController', ['$scope', '$http',function($scope, $http) {
 	$scope.inputValue = {
 		secondName : "",
 		firstName : "",
@@ -25,4 +27,17 @@ clickButtonApp.controller('myController', function($scope, $http) {
 				});
 
 	}
-});
+}]);
+
+//var autocompleteApp = angular.module('autoComplete', );
+angular.module('postTest').controller('TypeaheadCtrl', ['$scope', '$http',function ($scope, $http, limitToFilter) {
+
+	  //http://www.geobytes.com/free-ajax-cities-jsonp-api.htm
+
+	  $scope.cities = function(cityName) {
+	    return $http.jsonp("http://gd.geobytes.com/AutoCompleteCity?callback=JSON_CALLBACK &filter=US&q="+cityName).then(function(response){
+	      return limitToFilter(response.data, 15);
+	    });
+	  };
+	  
+	}]);

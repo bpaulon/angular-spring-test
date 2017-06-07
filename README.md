@@ -2,4 +2,4 @@
 AngularJs to Spring Boot tests
 
 # Redis controller
-it needs an running Redis db
+it needs a running Redis db
