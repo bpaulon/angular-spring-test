@@ -6,34 +6,26 @@ app.factory('MovieRetriever', function($http, $q, $timeout){
 
   MovieRetriever.getmovies = function(i) {
     var moviedata = $q.defer();
-    var movies;
+    //var movies;
 
-    var someMovies = ["The Wolverine", "The Smurfs 2", "The Mortal Instruments: City of Bones", "Drinking Buddies", "All the Boys Love Mandy Lane", "The Act Of Killing", "Red 2", "Jobs", "Getaway", "Red Obsession", "2 Guns", "The World's End", "Planes", "Paranoia", "The To Do List", "Man of Steel"];
+    var names = [""]
 
-    var moreMovies = ["The Wolverine", "The Smurfs 2", "The Mortal Instruments: City of Bones"]
+	$http.get('http://localhost:8080/sandbox/complete/' + i)
+			
+			.success(function(data, status, headers, config) {
+				// this callback will be called asynchronously
+				// when the response is available
+				names = data;
+				console.log(data);
+			}).error(function(data, status, headers, config) {
+				// called asynchronously if an error occurs
+				// or server returns response with an error status.
+			});
 
-		$http.get('http://localhost:8080/sandbox/complete/' + i)
-				
-				.success(function(data, status, headers, config) {
-					// this callback will be called asynchronously
-					// when the response is available
-					movies = data;
-					console.log(data);
-				}).error(function(data, status, headers, config) {
-					// called asynchronously if an error occurs
-					// or server returns response with an error status.
-				});
-
-	
-	  
-    if(i && i.indexOf('T')!=-1)
-      movies=moreMovies;
-    else
-      movies=moreMovies;
 
     $timeout(function(){
-      moviedata.resolve(movies);
-    },1000);
+      moviedata.resolve(names);
+    },500);
 
     return moviedata.promise
   }
