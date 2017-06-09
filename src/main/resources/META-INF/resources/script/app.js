@@ -6,8 +6,6 @@ app.factory('MovieRetriever', function($http, $q, $timeout){
 
   MovieRetriever.getmovies = function(i) {
     var moviedata = $q.defer();
-    //var movies;
-
     var names = [""]
 
 	$http.get('http://localhost:8080/sandbox/complete/' + i)

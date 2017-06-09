@@ -52,6 +52,7 @@ public class RedisRestController {
 		hashOps.put(FOO, "bar2", new RedisResult("zzz", "whatever"));
 		template.opsForSet().add("idset", "bar2");
 
+		//template.opsForValue().in
 		log.info("Existing values {}", hashOps.entries(FOO));
 	}
 

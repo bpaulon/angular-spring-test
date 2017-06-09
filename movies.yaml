@@ -1,0 +1,9 @@
+---
+- name: "Alien Ressurection"
+  plot: "more aliens"
+  director: "Ridley Scott"
+  releaseDate: "1980-02-01"
+- name: "Alien Covenant"
+  plot: "evan more aliens"
+  director: "Ridley Scott"
+  releaseDate: "2017-02-01"
