@@ -1,4 +1,4 @@
-package bcp.spring.angularjs.redis;
+package bcp.spring.angularjs.redis.dbconfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,11 +17,10 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import bcp.spring.angularjs.redis.dbconfig.Movie;
 
-public class YAMLReaderTest {
+public class YAMLReader {
 
 	ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 	
-	@Test
 	public void testWrite() throws JsonProcessingException {
 		 ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		 ArrayList<Movie> movieList = new ArrayList<>();
@@ -32,7 +31,6 @@ public class YAMLReaderTest {
 		 
 	}
 	
-	@Test
 	public void testRead() throws JsonParseException, JsonMappingException, IOException {
 		//List<Movie> movie = mapper.readValue(new File("movies.yaml").g,new TypeReference<List<Movie>>());
 		List<Movie> movies = mapper.readValue(new File("movies.yaml"), new TypeReference<List<Movie>>(){}) ;

@@ -1,8 +1,7 @@
-package bcp.spring.angularjs.redis;
+package bcp.spring.angularjs.redis.dbconfig;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -20,7 +19,6 @@ public class Movie {
 	private String director;
 	
 	@JsonDeserialize(using = LocalDateDeserializer.class)
-//	@JsonFormat(pattern = "yyyy-MM-dd")
 	@JsonSerialize(using = LocalDateSerializer.class)
 	private LocalDate releaseDate;
 }

@@ -1,5 +1,7 @@
 package bcp.spring.angularjs.redis;
 
+import static bcp.spring.angularjs.redis.dbconfig.RedisConfiguration.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -11,7 +13,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import static bcp.spring.angularjs.redis.RedisConfiguration.*;
 
 import lombok.extern.slf4j.Slf4j;
 

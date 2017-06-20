@@ -1,4 +1,4 @@
-package bcp.spring.angularjs.redis;
+package bcp.spring.angularjs.redis.dbconfig;
 
 import java.io.IOException;
 import java.time.LocalDate;
