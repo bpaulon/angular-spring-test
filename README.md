@@ -13,6 +13,8 @@ List of commands here https://redis.io/commands
 
 ### General
 KEYS * - shows all the keys
+scan 0 MATCH word* COUNT 100 - returns the keys matching word*
+
 
 ### Hashes
 hgetall <the key of the hash> - displays all 
@@ -33,4 +35,5 @@ WATCH is for optimistic locking. Watch is discarded after the transaction ends (
 ### Ordered set
 zrange <the key of the set> 0 -1 -displays the whole set ordered by rank
 zrevrange 	- displays the values in reverse order
+
 

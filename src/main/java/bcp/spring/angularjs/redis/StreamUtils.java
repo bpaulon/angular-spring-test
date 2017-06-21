@@ -33,4 +33,7 @@ public class StreamUtils {
 	public static <T> Stream<T> takeWhile(Stream<T> stream, Predicate<? super T> predicate) {
 		return StreamSupport.stream(takeWhile(stream.spliterator(), predicate), false);
 	}
+	
+    
+	public static Predicate<String> stringNotNullOrEmpty =  s -> s != null && !s.isEmpty(); 
 }

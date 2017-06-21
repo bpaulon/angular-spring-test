@@ -58,7 +58,7 @@ public class MovieConfig {
 	
 	public void storeMovie(Movie movie, long movieId) {
 		template.execute(new SessionCallback<List<Object>>() {
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public List<Object> execute(RedisOperations operations) throws DataAccessException {
 				operations.multi();
 				
@@ -67,7 +67,7 @@ public class MovieConfig {
 				Map<String, Integer> metaphones = extractWords(movie.getPlot());
 				
 				metaphones.keySet().forEach(mp -> {
-					operations.opsForZSet().add(mp, movieId, metaphones.get(mp));
+					operations.opsForZSet().add("word:"+ mp, movieId, metaphones.get(mp));
 				});
 				
 				return operations.exec();

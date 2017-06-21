@@ -58,8 +58,7 @@ public class EntryMatcher {
 	private List<String> processFromIndex(Long startIndex) {
 		List<String> results = new ArrayList<>(count);
 
-		final long rangelen = 50; // This is not random, try to get replies <
-									// MTU size
+		final long rangelen = 50; // This is not random, try to get replies < MTU size
 
 		boolean moreMatches = true;
 		while (moreMatches && results.size() != count) {
