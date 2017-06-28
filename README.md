@@ -24,15 +24,15 @@ scan 0 MATCH word* COUNT 100 - returns the keys matching word*
 hgetall <the key of the hash> - displays all 
 
 ### Transactions
-\> MULTI
-OK
-\> INCR foo
-QUEUED
-\> INCR bar
-QUEUED
-\> EXEC
-1) (integer) 1
-2) (integer) 1
+&gt; MULTI  
+OK  
+&gt; INCR foo  
+QUEUED  
+&gt; INCR bar  
+QUEUED  
+&gt; EXEC  
+1) (integer) 1  
+2) (integer) 1  
 
 WATCH is for optimistic locking. Watch is discarded after the transaction ends (EXEC or DISCARD)
  
