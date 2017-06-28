@@ -11,6 +11,10 @@ http://docs.spring.io/spring-data/redis/docs/1.4.0.RC1/reference/html/redis.html
 # Redis cheat sheet
 List of commands here https://redis.io/commands
 
+### Redis client
+- redis-cli -h  192.168.99.100 -p 6379 - connect to a different machine and port
+
+
 ### General
 KEYS * - shows all the keys
 scan 0 MATCH word* COUNT 100 - returns the keys matching word*
@@ -20,13 +24,13 @@ scan 0 MATCH word* COUNT 100 - returns the keys matching word*
 hgetall <the key of the hash> - displays all 
 
 ### Transactions
-> MULTI
+\> MULTI
 OK
-> INCR foo
+\> INCR foo
 QUEUED
-> INCR bar
+\> INCR bar
 QUEUED
-> EXEC
+\> EXEC
 1) (integer) 1
 2) (integer) 1
 
