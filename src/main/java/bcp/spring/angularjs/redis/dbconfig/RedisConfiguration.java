@@ -6,9 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.stream.IntStream;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
@@ -22,13 +22,26 @@ import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @Slf4j
-public class RedisConfiguration {
+public class RedisConfiguration implements CommandLineRunner {
 
 	public static final String PREFIXES_Z_SET = "prefixesZSet";
-
+	
+	@Value("${redis.server.host:localhost}")
+	private String redisServerHost;
+	
+	@Value("${redis.server.port:6379 }")
+	private int redisServerPort;
+	
+ 
 	@Bean
 	JedisConnectionFactory jedisConnectionFactory() {
-		return new JedisConnectionFactory();
+		JedisConnectionFactory factory =  new JedisConnectionFactory();
+		factory.setHostName(redisServerHost);
+        factory.setPort(redisServerPort);
+        factory.setUsePool(true);
+        
+        log.info("Connecting to REDIS server {}:{}", redisServerHost, redisServerPort);
+        return factory;
 	}
 
 	@Bean
@@ -45,20 +58,14 @@ public class RedisConfiguration {
 		
 		final RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
 		template.setConnectionFactory(jedisConnectionFactory());
-
+		
 		// these are required to ensure keys and values are correctly serialized
 		template.setKeySerializer(new StringRedisSerializer());
-		//template.setHashValueSerializer(new GenericToStringSerializer<Object>(Object.class));
+		// hashes are serialized as JSON containing the class name
 		template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
 		template.setValueSerializer(new GenericToStringSerializer<Object>(Object.class));
 		
-		log.info("RedistTemplate created: {}", template);
 		return template;
-	}
-	
-	@PostConstruct
-	public void afterInit() {
-		initPrefixes();
 	}
 	
 	private void initPrefixes() {
@@ -80,5 +87,10 @@ public class RedisConfiguration {
 			redisTemplate().opsForZSet().add(PREFIXES_Z_SET, prefix, 0);
 		});
 		redisTemplate().opsForZSet().add(PREFIXES_Z_SET, line.trim() + "*", 0);
+	}
+
+	@Override
+	public void run(String... args) throws Exception {
+		initPrefixes();
 	}
 }

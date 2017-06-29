@@ -8,3 +8,8 @@ logging:
   level:
     org.springframework.web: INFO
     bcp.spring: DEBUG
+ 
+redis:
+  server:
+    #host:192.68.99.100
+    #port:6379

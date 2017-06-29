@@ -74,8 +74,6 @@ public class MovieConfig {
 			}
 			
 		});
-		
-		
 	}
 	
 	private Map<String, Integer> extractWords(String input) {
@@ -83,15 +81,15 @@ public class MovieConfig {
 		Pattern p = Pattern.compile("[\\w']+");
 		Matcher m = p.matcher(input);
 
-		while ( m.find() ) {
+		while (m.find()) {
 			String word = input.substring(m.start(), m.end());
-			String encoding = doubleMetaphone.doubleMetaphone(word, false); 
+			String encoding = doubleMetaphone.doubleMetaphone(word, false);
 			Integer frequency = words.getOrDefault(encoding, 0);
-		    words.put(encoding,  ++frequency);
-		    
-		    //optional - do the same for the alternate metaphone encoding
+			words.put(encoding, ++frequency);
+
+			// optional - do the same for the alternate metaphone encoding
 		}
-		
+
 		log.debug("found in input: {}", words);
 		return words;
 	}

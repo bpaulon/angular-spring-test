@@ -5,7 +5,6 @@ import static java.util.stream.Collectors.toList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -43,18 +42,18 @@ public class RedisRestController {
 
 	@GetMapping("singlekey/{key}")
 	public RedisResult getSingleValue(@PathVariable("key") String key) {
-		// String value = (String)this.template.opsForValue().get(key);
-
 		RedisResult result = (RedisResult) this.template.opsForHash().get(FOO, key);
 		return result;
 	}
 
+	
 	@GetMapping("complete/{prefix}")
 	public List<String> autoComplete(@PathVariable("prefix") String prefix) {
-		EntryMatcher em = beanFactory.getBean(EntryMatcher.class, new Object[] { prefix, 20 });
+		EntryMatcher em = beanFactory.getBean(EntryMatcher.class, prefix, 20);
 		List<String> results = em.matchAll();
 		return results;
 	}
+	
 	
 	@GetMapping("search") 
 	public List<Movie> search(@RequestParam(value="word", required=true) List<String> words) {

@@ -1,6 +1,6 @@
 package bcp.spring.angularjs.redis;
 
-import static bcp.spring.angularjs.redis.dbconfig.RedisConfiguration.*;
+import static bcp.spring.angularjs.redis.dbconfig.RedisConfiguration.PREFIXES_Z_SET;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EntryMatcher {
 
-	private final String prefix;
-	private final int count;
+	private String prefix;
+	private int count;
 
 	@Autowired
 	@Qualifier("RedisTemplate")
