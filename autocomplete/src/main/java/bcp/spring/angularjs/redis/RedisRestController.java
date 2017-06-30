@@ -29,5 +29,5 @@ public class RedisRestController {
 		MovieByStoryMatcher movieMatcher = beanFactory.getBean(MovieByStoryMatcher.class, words);
 		return movieMatcher.match();
 	}
-	
+
 }

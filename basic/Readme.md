@@ -1,0 +1,1 @@
+Basic AngularJs post to a Spring Boot REST service

@@ -17,6 +17,13 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.junit.platform.gradle.plugin'
 
+eclipse {
+	project {
+		// see: https://docs.gradle.org/3.5/dsl/org.gradle.plugins.ide.eclipse.model.EclipseProject.html
+		name = 'AngularJS-SpringBoot-Autocomplete'
+		comment = 'AngularJS to Spring Boot autocomplete example'
+	}
+}
 group = 'bcp.spring.angularjs'
 version = '1.0-SNAPSHOT'
 description = "AngularJS to Spring Boot"

@@ -37,7 +37,6 @@ public class RedisConfigurationData implements CommandLineRunner {
 		this.redisTemplate = redisTemplate;
 	}
 
-	
 	/**
 	 * Runs last after all the components are initialized
 	 */
@@ -45,7 +44,7 @@ public class RedisConfigurationData implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		initPrefixes();
 	}
-	
+
 	/**
 	 * Decomposes the names in the file and creates a list of prefixes
 	 */
@@ -62,16 +61,17 @@ public class RedisConfigurationData implements CommandLineRunner {
 	/**
 	 * Processes the file filtering the empty lines
 	 * 
-	 * @param path the path of the file
+	 * @param path
+	 *            the path of the file
 	 * @throws IOException
 	 */
 	public void processFile(Path path) throws IOException {
 		Files.lines(path)
-			.filter(StreamUtils.stringNotNullOrEmpty())
-			.filter(l -> !l.startsWith("#"))
-			.forEach(this::processLine);
+				.filter(StreamUtils.stringNotNullOrEmpty())
+				.filter(l -> !l.startsWith("#"))
+				.forEach(this::processLine);
 	}
-	
+
 	/**
 	 * Writes all the prefixes including the full name ending in "*"
 	 * 
@@ -79,13 +79,13 @@ public class RedisConfigurationData implements CommandLineRunner {
 	 */
 	public void processLine(String line) {
 		final String l = line.trim();
-		
 		List<String> values = IntStream.range(1, l.length())
-			.mapToObj(n -> l.substring(0, n))
-			.collect(Collectors.toList());
-		
+				.mapToObj(n -> l.substring(0, n))
+				.collect(Collectors.toList());
+
 		values.add(l + "*");
-		values.forEach(v -> redisTemplate.opsForZSet().add(PREFIXES_Z_SET, v, 0));
+		values.forEach(v -> redisTemplate.opsForZSet()
+				.add(PREFIXES_Z_SET, v, 0));
 	}
 
 }

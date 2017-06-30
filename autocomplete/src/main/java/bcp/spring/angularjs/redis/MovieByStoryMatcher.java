@@ -24,59 +24,61 @@ import lombok.extern.slf4j.Slf4j;
 @Scope(value = "prototype")
 @Slf4j
 public class MovieByStoryMatcher {
-	
+
 	@Autowired
 	@Qualifier("RedisTemplate")
 	private RedisTemplate<String, Object> template;
-	
+
 	private List<String> words;
-	
-	private DoubleMetaphone doubleMetaphone; 
-	
+
+	private DoubleMetaphone doubleMetaphone;
+
 	public MovieByStoryMatcher(List<String> words) {
 		this.words = words;
 		doubleMetaphone = new DoubleMetaphone();
 	}
-	
+
 	public List<Movie> match() {
 		List<String> searchKeys = words.stream()
 				.filter(StreamUtils.stringNotNullOrEmpty())
 				.map(this::createKeyForWord)
 				.collect(toList());
 		log.debug("Search keys: {}", searchKeys);
-		
+
 		// get all the movie ids by intersecting the sets
-		//FIXME - the key of the ZSET in output should be unique
-		template.opsForZSet().intersectAndStore(searchKeys.get(0), searchKeys, "out");
-		
+		// FIXME - the key of the ZSET in output should be unique
+		template.opsForZSet()
+				.intersectAndStore(searchKeys.get(0), searchKeys, "out");
+
 		// expire the set to avoid cluttering
 		template.expire("out", 10, TimeUnit.SECONDS);
-		
-		@SuppressWarnings({"unchecked","rawtypes"})
-		Set<TypedTuple<String>> ids = (Set)template.opsForZSet().rangeWithScores("out", 0, -1);
-		
-		
+
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		Set<TypedTuple<String>> ids = (Set) template.opsForZSet()
+				.rangeWithScores("out", 0, -1);
+
 		List<Movie> movies = ids.stream()
-			// each movie id has an associated score which is the frequency of the searched words
-			// sort the ids in the reverse order so the first movie id will be the one with the
-			// highest frequency of the searched words
-			.sorted(Collections.reverseOrder(Comparator.comparing(TypedTuple::getScore)))
-			// map id to movie
-			.peek(i -> log.debug("mapping id {} >>", i.getValue()))
-			.map(this::getMovieById)
-			.peek(m -> log.debug("movie: {}", m))
-			.collect(toList());
-				
+				// Each movie id has an associated score which is the frequency of the searched words
+				// Sort the ids in the reverse order so the first movie id will be the one with 
+				// the highest frequency of the searched words
+				.sorted(Collections.reverseOrder(Comparator.comparing(TypedTuple::getScore)))
+				// map id to movie
+				.peek(i -> log.debug("mapping id {} >>", i.getValue()))
+				.map(this::getMovieById)
+				.peek(m -> log.debug("movie: {}", m))
+				.collect(toList());
+
 		return movies;
 	}
-	
+
 	private String createKeyForWord(String word) {
 		return MovieConfig.WORD_KEY_PREFIX + doubleMetaphone.doubleMetaphone(word, false);
 	}
-	
+
 	private Movie getMovieById(TypedTuple<String> idWithScore) {
 		long movieId = Long.parseLong(idWithScore.getValue());
-		return (Movie)template.opsForHash().get(MovieConfig.MOVIES_KEY, movieId);
+		return (Movie) template.opsForHash()
+				.get(MovieConfig.MOVIES_KEY, movieId);
 	}
-	
+
 }

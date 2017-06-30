@@ -1,5 +1,5 @@
-# angular-spring-test
-AngularJs to Spring Boot tests
+# AngularJS to Spring Boot using a REDIS DB
+AngularJs to Spring Boot autocomplete example
 
 # Redis controller
 it needs a running Redis db
