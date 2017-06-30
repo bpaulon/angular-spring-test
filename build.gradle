@@ -62,9 +62,9 @@ dependencies {
 			name: 'lombok', 
 			version:'1.16.4' 
 	
-	testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.0.0-M4'
-	testCompile group: 'org.junit.platform', name: 'junit-platform-runner', version: '1.0.0-M4'
-	testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.0-M4'
+	testCompile 'org.junit.jupiter:junit-jupiter-engine:5.0.0-M4'
+	testCompile 'org.junit.platform:junit-platform-runner:1.0.0-M4'
+	testCompile 'org.junit.jupiter:junit-jupiter-api:5.0.0-M4'
 
 }
 

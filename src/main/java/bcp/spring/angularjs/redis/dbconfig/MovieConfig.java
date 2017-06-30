@@ -33,7 +33,6 @@ public class MovieConfig {
 
 	ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 	
-	DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
 	
 	@Autowired
 	@Qualifier("RedisTemplate")
@@ -81,6 +80,8 @@ public class MovieConfig {
 		Pattern p = Pattern.compile("[\\w']+");
 		Matcher m = p.matcher(input);
 
+		DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+		
 		while (m.find()) {
 			String word = input.substring(m.start(), m.end());
 			String encoding = doubleMetaphone.doubleMetaphone(word, false);

@@ -29,10 +29,7 @@
 		<button ng-click="sendUserData()">Click Me!</button>
 	</div>
 	
-	<div id="autoComplete" ng-controller="TypeaheadCtrl">
-        <pre>Model: {{result | json}}</pre>
-        <input type="text" ng-model="result" typeahead="suggestion for suggestion in cities($viewValue)">
-    </div>
+	
 </body>
 
 </html>

@@ -1,6 +1,6 @@
 package bcp.spring.angularjs.redis;
 
-import static bcp.spring.angularjs.redis.dbconfig.RedisConfiguration.PREFIXES_Z_SET;
+import static bcp.spring.angularjs.redis.dbconfig.RedisConfigurationData.PREFIXES_Z_SET;
 
 import java.util.ArrayList;
 import java.util.List;
