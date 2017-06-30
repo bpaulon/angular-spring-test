@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Scope(value = "prototype")
 @Slf4j
-public class EntryMatcher {
+public class NameMatcher {
 
 	private String prefix;
 	private int count;
@@ -28,7 +28,7 @@ public class EntryMatcher {
 	@Qualifier("RedisTemplate")
 	private RedisTemplate<String, Object> template;
 
-	public EntryMatcher(String prefix, int count) {
+	public NameMatcher(String prefix, int count) {
 		this.prefix = prefix;
 		this.count = count;
 	}

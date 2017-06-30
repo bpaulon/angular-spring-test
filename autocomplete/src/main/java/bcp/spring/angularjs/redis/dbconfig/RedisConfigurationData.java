@@ -31,9 +31,9 @@ public class RedisConfigurationData implements CommandLineRunner {
 	private RedisTemplate<String, Object> redisTemplate;
 
 	@Autowired
-	public RedisConfigurationData(@Value("classpath:/config/female-names.txt") Resource file,
+	public RedisConfigurationData(@Value("classpath:/config/female-names.txt") Resource resource,
 			@Qualifier("RedisTemplate") RedisTemplate<String, Object> redisTemplate) throws IOException {
-		dataFile = file.getFile();
+		dataFile = resource.getFile();
 		this.redisTemplate = redisTemplate;
 	}
 
@@ -68,6 +68,7 @@ public class RedisConfigurationData implements CommandLineRunner {
 	public void processFile(Path path) throws IOException {
 		Files.lines(path)
 			.filter(StreamUtils.stringNotNullOrEmpty())
+			.filter(l -> !l.startsWith("#"))
 			.forEach(this::processLine);
 	}
 	

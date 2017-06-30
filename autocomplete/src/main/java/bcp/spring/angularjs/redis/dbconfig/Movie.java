@@ -17,8 +17,9 @@ public class Movie {
 	private String name;
 	private String plot;
 	private String director;
-	
+
 	@JsonDeserialize(using = LocalDateDeserializer.class)
 	@JsonSerialize(using = LocalDateSerializer.class)
 	private LocalDate releaseDate;
+	
 }

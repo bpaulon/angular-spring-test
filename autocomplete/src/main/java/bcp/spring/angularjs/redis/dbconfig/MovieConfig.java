@@ -1,6 +1,5 @@
 package bcp.spring.angularjs.redis.dbconfig;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +12,9 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.codec.language.DoubleMetaphone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -31,26 +32,32 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MovieConfig {
 
+	public final static String MOVIES_KEY = "movies";
+	public final static String MOVIE_SEQUENCE_KEY = "movie:id";
+	public final static String WORD_KEY_PREFIX = "word:";
+	
 	ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 	
+	@Value("classpath:/config/movies.yaml")
+	Resource movieResource; 
 	
 	@Autowired
 	@Qualifier("RedisTemplate")
 	private RedisTemplate<String, Object> template;
 	
 	public List<Movie> readMovies() throws JsonParseException, JsonMappingException, IOException {
-		List<Movie> movies = mapper.readValue(new File("movies.yaml"), new TypeReference<List<Movie>>(){}) ;
+		List<Movie> movies = mapper.readValue(movieResource.getFile(), new TypeReference<List<Movie>>(){}) ;
 		return movies;
 	}
 	
 	@PostConstruct
 	public void initMovies() throws Exception {
 		List<Movie> movies = readMovies();
-		template.opsForValue().set("movie:id", 0L);
+		template.opsForValue().set(MOVIE_SEQUENCE_KEY, 0L);
 		movies.forEach(movie -> {
 			// id must be incremented outside the transaction - otherwise the INCR operation
 			// only gets QUEUED and NO value is returned
-			long movieId = template.opsForValue().increment("movie:id", 1L);
+			long movieId = template.opsForValue().increment(MOVIE_SEQUENCE_KEY, 1L);
 			storeMovie(movie, movieId);
 		});
 	}
@@ -61,12 +68,12 @@ public class MovieConfig {
 			public List<Object> execute(RedisOperations operations) throws DataAccessException {
 				operations.multi();
 				
-				operations.opsForHash().put("movies", movieId, movie);
+				operations.opsForHash().put(MOVIES_KEY, movieId, movie);
 				
 				Map<String, Integer> metaphones = extractWords(movie.getPlot());
 				
 				metaphones.keySet().forEach(mp -> {
-					operations.opsForZSet().add("word:"+ mp, movieId, metaphones.get(mp));
+					operations.opsForZSet().add(WORD_KEY_PREFIX + mp, movieId, metaphones.get(mp));
 				});
 				
 				return operations.exec();

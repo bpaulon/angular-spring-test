@@ -8,56 +8,37 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.codec.language.DoubleMetaphone;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.HashOperations;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Component;
 
 import bcp.spring.angularjs.redis.dbconfig.Movie;
+import bcp.spring.angularjs.redis.dbconfig.MovieConfig;
 import lombok.extern.slf4j.Slf4j;
 
-@RestController
+@Component
+@Scope(value = "prototype")
 @Slf4j
-public class RedisRestController {
-
-	private static final String FOO = "foo";
-
+public class MovieByStoryMatcher {
+	
 	@Autowired
 	@Qualifier("RedisTemplate")
 	private RedisTemplate<String, Object> template;
-
-	@Autowired
-	private BeanFactory beanFactory;
 	
-	DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
-
-	@GetMapping("singlekey/{key}")
-	public RedisResult getSingleValue(@PathVariable("key") String key) {
-		RedisResult result = (RedisResult) this.template.opsForHash().get(FOO, key);
-		return result;
-	}
-
+	private List<String> words;
 	
-	@GetMapping("complete/{prefix}")
-	public List<String> autoComplete(@PathVariable("prefix") String prefix) {
-		EntryMatcher em = beanFactory.getBean(EntryMatcher.class, prefix, 20);
-		List<String> results = em.matchAll();
-		return results;
+	private DoubleMetaphone doubleMetaphone; 
+	
+	public MovieByStoryMatcher(List<String> words) {
+		this.words = words;
+		doubleMetaphone = new DoubleMetaphone();
 	}
 	
-	
-	@GetMapping("search") 
-	public List<Movie> search(@RequestParam(value="word", required=true) List<String> words) {
-		
+	public List<Movie> match() {
 		List<String> searchKeys = words.stream()
 				.filter(StreamUtils.stringNotNullOrEmpty())
 				.map(this::createKeyForWord)
@@ -67,11 +48,12 @@ public class RedisRestController {
 		// get all the movie ids by intersecting the sets
 		//FIXME - the key of the ZSET in output should be unique
 		template.opsForZSet().intersectAndStore(searchKeys.get(0), searchKeys, "out");
+		
+		// expire the set to avoid cluttering
 		template.expire("out", 10, TimeUnit.SECONDS);
 		
 		@SuppressWarnings({"unchecked","rawtypes"})
 		Set<TypedTuple<String>> ids = (Set)template.opsForZSet().rangeWithScores("out", 0, -1);
-		log.debug("ids found {}", ids);
 		
 		
 		List<Movie> movies = ids.stream()
@@ -82,31 +64,19 @@ public class RedisRestController {
 			// map id to movie
 			.peek(i -> log.debug("mapping id {} >>", i.getValue()))
 			.map(this::getMovieById)
-			.peek(m -> log.debug(">> {}", m))
+			.peek(m -> log.debug("movie: {}", m))
 			.collect(toList());
 				
 		return movies;
 	}
-
-	@PostConstruct
-	private void addValues() {
-		HashOperations<String, String, RedisResult> hashOps = template.opsForHash();
-		hashOps.put(FOO, "bar1", new RedisResult("baz", "whatever"));
-		template.opsForSet().add("idset", "bar1");
-
-		hashOps.put(FOO, "bar2", new RedisResult("zzz", "whatever"));
-		template.opsForSet().add("idset", "bar2");
-
-		log.info("Existing values {}", hashOps.entries(FOO));
-	}
 	
 	private String createKeyForWord(String word) {
-		return "word:" + doubleMetaphone.doubleMetaphone(word, false);
+		return MovieConfig.WORD_KEY_PREFIX + doubleMetaphone.doubleMetaphone(word, false);
 	}
 	
 	private Movie getMovieById(TypedTuple<String> idWithScore) {
 		long movieId = Long.parseLong(idWithScore.getValue());
-		return (Movie)template.opsForHash().get("movies", movieId);
+		return (Movie)template.opsForHash().get(MovieConfig.MOVIES_KEY, movieId);
 	}
-
+	
 }

@@ -1,14 +1,14 @@
 var app = angular.module('app', ['autocomplete']);
 
 // the service that retrieves some movie title from an url
-app.factory('MovieRetriever', function($http, $q, $timeout){
-  var MovieRetriever = new Object();
+app.factory('NameRetriever', function($http, $q, $timeout){
+  var NameRetriever = new Object();
 
-  MovieRetriever.getmovies = function(i) {
-    var moviedata = $q.defer();
+  NameRetriever.getnames = function(i) {
+    var namedata = $q.defer();
     var names = [""]
 
-	$http.get('http://localhost:8080/sandbox/complete/' + i)
+	$http.get('/complete/' + i)
 			
 			.success(function(data, status, headers, config) {
 				// this callback will be called asynchronously
@@ -22,29 +22,29 @@ app.factory('MovieRetriever', function($http, $q, $timeout){
 
 
     $timeout(function(){
-      moviedata.resolve(names);
+      namedata.resolve(names);
     },500);
 
-    return moviedata.promise
+    return namedata.promise
   }
 
-  return MovieRetriever;
+  return NameRetriever;
 });
 
-app.controller('MyCtrl', function($scope, MovieRetriever){
+app.controller('MyCtrl', function($scope, NameRetriever){
 
-  $scope.movies = MovieRetriever.getmovies("...");
+  $scope.movies = NameRetriever.getnames("...");
   $scope.movies.then(function(data){
     $scope.movies = data;
   });
 
-  $scope.getmovies = function(){
+  $scope.getnames = function(){
     return $scope.movies;
   }
 
   $scope.doSomething = function(typedthings){
     console.log("Do something like reload data with this: " + typedthings );
-    $scope.newmovies = MovieRetriever.getmovies(typedthings);
+    $scope.newmovies = NameRetriever.getnames(typedthings);
     $scope.newmovies.then(function(data){
       $scope.movies = data;
     });
