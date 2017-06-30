@@ -59,7 +59,7 @@ public class RedisRestController {
 	public List<Movie> search(@RequestParam(value="word", required=true) List<String> words) {
 		
 		List<String> searchKeys = words.stream()
-				.filter(StreamUtils.stringNotNullOrEmpty)
+				.filter(StreamUtils.stringNotNullOrEmpty())
 				.map(this::createKeyForWord)
 				.collect(toList());
 		log.debug("Search keys: {}", searchKeys);

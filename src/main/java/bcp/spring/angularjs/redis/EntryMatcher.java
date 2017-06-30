@@ -34,7 +34,7 @@ public class EntryMatcher {
 	}
 
 	/**
-	 * Match all the entries in the REDIS set that are whole words (i.e. end
+	 * Matches all the entries in the set which represent complete names (i.e. end
 	 * with '*') and start with prefix
 	 * 
 	 * @return list of entries
@@ -64,7 +64,9 @@ public class EntryMatcher {
 		while (moreMatches && results.size() != count) {
 			Set<String> range = (Set) template.opsForZSet().range(PREFIXES_Z_SET, startIndex,
 					startIndex + rangelen - 1);
+			
 			log.debug("Processing range: {}", range);
+			
 			startIndex += rangelen;
 			
 			if (range == null || range.size() == 0) {

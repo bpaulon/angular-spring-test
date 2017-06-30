@@ -1,9 +1,12 @@
 package bcp.spring.angularjs.redis.dbconfig;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import bcp.spring.angularjs.redis.StreamUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -24,39 +28,63 @@ public class RedisConfigurationData implements CommandLineRunner {
 
 	private File dataFile;
 
-	@SuppressWarnings("rawtypes")
-	private RedisTemplate redisTemplate;
+	private RedisTemplate<String, Object> redisTemplate;
 
 	@Autowired
 	public RedisConfigurationData(@Value("classpath:/config/female-names.txt") Resource file,
-			@SuppressWarnings("rawtypes") @Qualifier("RedisTemplate") RedisTemplate redisTemplate) throws IOException {
+			@Qualifier("RedisTemplate") RedisTemplate<String, Object> redisTemplate) throws IOException {
 		dataFile = file.getFile();
 		this.redisTemplate = redisTemplate;
 	}
 
-	private void initPrefixes() {
-		try (BufferedReader reader = new BufferedReader(new FileReader(dataFile))) {
-			String line = null;
-			while ((line = reader.readLine()) != null) {
-				processLine(line);
-			}
-		} catch (IOException ioe) {
-			log.error("could not create prefixes", ioe);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private void processLine(String line) {
-		final String entry = line.trim();
-		IntStream.range(1, entry.length()).forEach(n -> {
-			String prefix = entry.substring(0, n);
-			redisTemplate.opsForZSet().add(PREFIXES_Z_SET, prefix, 0);
-		});
-		redisTemplate.opsForZSet().add(PREFIXES_Z_SET, line.trim() + "*", 0);
-	}
-
+	
+	/**
+	 * Runs last after all the components are initialized
+	 */
 	@Override
 	public void run(String... args) throws Exception {
 		initPrefixes();
 	}
+	
+	/**
+	 * Decomposes the names in the file and creates a list of prefixes
+	 */
+	private void initPrefixes() throws IOException {
+		Path path = Paths.get(dataFile.getPath());
+		try {
+			processFile(path);
+		} catch (IOException e) {
+			log.error("Could not processs path {}", path, e);
+			throw e;
+		}
+	}
+
+	/**
+	 * Processes the file filtering the empty lines
+	 * 
+	 * @param path the path of the file
+	 * @throws IOException
+	 */
+	public void processFile(Path path) throws IOException {
+		Files.lines(path)
+			.filter(StreamUtils.stringNotNullOrEmpty())
+			.forEach(this::processLine);
+	}
+	
+	/**
+	 * Writes all the prefixes including the full name ending in "*"
+	 * 
+	 * @param line
+	 */
+	public void processLine(String line) {
+		final String l = line.trim();
+		
+		List<String> values = IntStream.range(1, l.length())
+			.mapToObj(n -> l.substring(0, n))
+			.collect(Collectors.toList());
+		
+		values.add(l + "*");
+		values.forEach(v -> redisTemplate.opsForZSet().add(PREFIXES_Z_SET, v, 0));
+	}
+
 }

@@ -35,5 +35,7 @@ public class StreamUtils {
 	}
 	
     
-	public static Predicate<String> stringNotNullOrEmpty =  s -> s != null && !s.isEmpty(); 
+	public static Predicate<String> stringNotNullOrEmpty() {
+		return s -> s != null && !s.isEmpty();
+	};
 }

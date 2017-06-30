@@ -1,0 +1,45 @@
+// For spring-boot gradle integration see:
+// http://docs.spring.io/spring-boot/docs/current/reference/html/build-tool-plugins-gradle-plugin.html
+
+plugins {
+	id 'org.springframework.boot' version '1.5.3.RELEASE'
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+
+group = 'bcp.spring.angularjs'
+version = '1.0-SNAPSHOT'
+description = "AngularJS to Spring Boot - Basic POST"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+tasks.withType(JavaCompile) { 
+	options.encoding = 'UTF-8' 
+}
+
+repositories { 
+	mavenCentral()
+}
+
+
+
+dependencies {
+
+	compile group: 'org.springframework.boot', 
+			name: 'spring-boot-starter-web'
+			
+	compile group: 'org.springframework.boot', 
+			name: 'spring-boot-devtools'
+			
+	compile group: 'org.projectlombok', 
+			name: 'lombok', 
+			version:'1.16.4' 
+
+}
+
+
+
