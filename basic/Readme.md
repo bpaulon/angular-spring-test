@@ -1,1 +1,1 @@
-Basic AngularJs post to a Spring Boot REST service
+Basic round-trip using HTTP Post from AngularJs to Spring Boot REST service
