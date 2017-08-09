@@ -1,0 +1,33 @@
+buildscript {
+	ext { 
+		springBootVersion = '1.5.6.RELEASE' 
+	}
+}
+
+allprojects {
+	apply plugin: 'java'
+	apply plugin: 'eclipse'
+
+	tasks.withType(JavaCompile) { 
+		options.encoding = 'UTF-8' 
+	}
+
+	sourceCompatibility = 1.8
+	targetCompatibility = 1.8
+   
+    repositories {
+        mavenCentral()
+    }
+	
+    dependencies {
+		compile group: 'org.springframework.boot', 
+			name: 'spring-boot-starter-web'
+		
+		compile group: 'org.springframework.boot', 
+			name: 'spring-boot-devtools'			
+		
+		compile group: 'org.projectlombok', 
+			name: 'lombok', 
+			version:'1.16.4' 
+    }
+}

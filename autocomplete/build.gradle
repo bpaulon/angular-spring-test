@@ -1,20 +1,18 @@
-// For spring-boot gradle integration see:
-// http://docs.spring.io/spring-boot/docs/current/reference/html/build-tool-plugins-gradle-plugin.html
+// For JUnit5 - Gradle integration and configuration see:
+// https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer
 buildscript {
-	repositories {
-		mavenCentral()
-	}
 	dependencies {
 		classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
 	}
 }
 
+// For spring-boot gradle integration see:
+// http://docs.spring.io/spring-boot/docs/current/reference/html/build-tool-plugins-gradle-plugin.html
 plugins {
 	id 'org.springframework.boot' version '1.5.3.RELEASE'
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
 apply plugin: 'org.junit.platform.gradle.plugin'
 
 eclipse {
@@ -24,34 +22,16 @@ eclipse {
 		comment = 'AngularJS to Spring Boot autocomplete example'
 	}
 }
+
 group = 'bcp.spring.angularjs'
 version = '1.0-SNAPSHOT'
 description = "AngularJS to Spring Boot"
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-
-tasks.withType(JavaCompile) { 
-	options.encoding = 'UTF-8' 
-}
-
-repositories { 
-	mavenCentral()
-}
 
 junitPlatform {
 	platformVersion = "1.0.0-M4"
 }
 
 dependencies {
-
-	compile group: 'org.springframework.boot', 
-			name: 'spring-boot-starter-web'
-			
-	compile group: 'org.springframework.boot', 
-			name: 'spring-boot-devtools'
-			
     compile group: 'org.springframework.data',
 			name: 'spring-data-redis'
 			
@@ -64,15 +44,10 @@ dependencies {
 	
 	compile group: 'com.fasterxml.jackson.dataformat',
 			name: 'jackson-dataformat-yaml'
-
-	compile group: 'org.projectlombok', 
-			name: 'lombok', 
-			version:'1.16.4' 
 	
 	testCompile 'org.junit.jupiter:junit-jupiter-engine:5.0.0-M4'
 	testCompile 'org.junit.platform:junit-platform-runner:1.0.0-M4'
 	testCompile 'org.junit.jupiter:junit-jupiter-api:5.0.0-M4'
-
 }
 
 
